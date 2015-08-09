@@ -15,3 +15,6 @@ test-coverage:
 
 install:
 	npm install && bower install
+
+clean:
+	rm -rf public/ node_modules/
