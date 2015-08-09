@@ -1,15 +1,17 @@
 {
-  "name": "leadscore-app",
+  "name": "app",
   "description": "",
   "repository": "",
   "version": "1.0.0",
-  "main": "leadscore.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "make test",
+    "build": "make build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ecstatic": "^0.8.0",
     "gulp": "^3.9.0",
     "gulp-clean": "^0.3.1",
     "gulp-inject": "^1.5.0",
@@ -18,6 +20,7 @@
     "wiredep": "^2.2.2"
   },
   "devDependencies": {
+    "bower": "^1.4.1",
     "gulp-livereload": "^3.8.0",
     "jasmine-core": "^2.3.4",
     "karma": "^0.12.37",

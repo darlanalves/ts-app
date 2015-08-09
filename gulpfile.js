@@ -1,17 +1,9 @@
 'use strict';
 var gulp = require('gulp');
 
-gulp.task('copy-assets', ['clean'], function() {
+gulp.task('copy-assets', function() {
 	gulp.src('app/assets/**')
 		.pipe(gulp.dest('public'));
-});
-
-gulp.task('clean', function() {
-	var clean = require('gulp-clean');
-	return gulp.src('public', {
-			read: false
-		})
-		.pipe(clean());
 });
 
 gulp.task('sass', function() {
@@ -44,6 +36,7 @@ gulp.task('include-source', function() {
 
 	return gulp.src('app/index.html')
 		.pipe(wiredep({
+			directory: 'public/vendor',
 			exclude: ['bootstrap-sass']
 		}))
 
