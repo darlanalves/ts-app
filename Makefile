@@ -27,6 +27,6 @@ install:
 	fi;\
 
 clean:
-	rm -rf public/ node_modules/
+	rm -rf public/ node_modules/ vendor/
 
 build-ci: clean install test build

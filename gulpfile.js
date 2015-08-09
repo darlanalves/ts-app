@@ -2,7 +2,12 @@
 var gulp = require('gulp');
 
 gulp.task('copy-assets', function() {
-	gulp.src('app/assets/**')
+	return gulp.src('app/assets/**')
+		.pipe(gulp.dest('public'));
+});
+
+gulp.task('copy-app', function() {
+	return gulp.src('app/src/**')
 		.pipe(gulp.dest('public'));
 });
 
@@ -12,7 +17,7 @@ gulp.task('sass', function() {
 	return gulp.src('app/styles/**/*.scss')
 		.pipe(sass({
 			includePaths: [
-				'public/vendor/bootstrap-sass/assets/stylesheets/',
+				'vendor/bootstrap-sass/assets/stylesheets/',
 				'app/styles'
 			]
 		}).on('error', sass.logError))
@@ -36,8 +41,8 @@ gulp.task('include-source', function() {
 
 	return gulp.src('app/index.html')
 		.pipe(wiredep({
-			directory: 'public/vendor',
-			exclude: ['bootstrap-sass']
+			exclude: ['bootstrap-sass', 'angular-mocks'],
+			cwd: '.'
 		}))
 
 		.pipe(injectFiles(paths.scripts))
@@ -73,6 +78,7 @@ gulp.task('build', function() {
 	runSequence(
 		'sass',
 		'copy-assets',
+		'copy-app',
 		'include-source'
 	);
 });
