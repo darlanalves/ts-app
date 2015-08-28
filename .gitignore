@@ -6,3 +6,5 @@ tmp
 public
 .project
 vendor/
+*.sublime*
+.env

@@ -1,0 +1,1 @@
+angular.module('app', ['main', 'people', 'core']).constant('BASE_URL', '{{API_ADDRESS}}');

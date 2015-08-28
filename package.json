@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "test": "make test",
-    "build": "make build"
+    "build": "make build-ci"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "gulp-clean": "^0.3.1",
     "gulp-inject": "^1.5.0",
     "gulp-sass": "^2.0.4",
+    "gulp-templatecache": "0.0.3",
     "run-sequence": "^1.1.2",
     "wiredep": "^2.2.2"
   },

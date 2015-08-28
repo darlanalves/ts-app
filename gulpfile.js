@@ -96,11 +96,14 @@ gulp.task('watch', function() {
 	livereload.listen();
 
 	function handleChanges(stream) {
-		stream.on('change', livereload.changed);
+		stream.on('change', function () {
+			console.log('>> RELOAD >>');
+			livereload.changed('*');
+		});
 	}
 
-	handleChanges(gulp.watch(['app/styles/**', 'app/assets/css/**', 'app/src/**'], ['build']));
-	handleChanges(gulp.watch(['app/index.html'], ['include-source']));
+	handleChanges(gulp.watch(['app/styles/**', 'app/assets/css/**', 'app/src/**/!(*spec).js'], ['build']));
+	handleChanges(gulp.watch(['app/index.html', 'bower.json'], ['include-source']));
 });
 
 gulp.task('build', function() {
