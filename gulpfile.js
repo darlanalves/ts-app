@@ -1,5 +1,8 @@
 'use strict';
 var gulp = require('gulp');
+var path = require('path');
+var fs = require('fs');
+var bowerPath = JSON.parse(fs.readFileSync('./.bowerrc')).directory;
 
 gulp.task('copy-assets', function() {
 	return gulp.src('app/assets/**')
@@ -11,13 +14,29 @@ gulp.task('copy-app', function() {
 		.pipe(gulp.dest('public'));
 });
 
+gulp.task('templates', function() {
+	var templateCache = require('gulp-templatecache');
+
+	var options = {
+		output: 'templates.js',
+		strip: 'app/src/',
+		prepend: '',
+		moduleName: 'main',
+		minify: {}
+	};
+
+	gulp.src('app/src/**/*.html')
+		.pipe(templateCache(options))
+		.pipe(gulp.dest('public'));
+});
+
 gulp.task('sass', function() {
 	var sass = require('gulp-sass');
 
 	return gulp.src('app/styles/**/*.scss')
 		.pipe(sass({
 			includePaths: [
-				'vendor/bootstrap-sass/assets/stylesheets/',
+				path.join(bowerPath, 'bootstrap-sass/assets/stylesheets/'),
 				'app/styles'
 			]
 		}).on('error', sass.logError))
@@ -30,7 +49,7 @@ gulp.task('include-source', function() {
 
 	var paths = {
 		scripts: {
-			src: ['**/module.js', '**/!(*module).js'],
+			src: ['**/module.js', '**/!(*spec).js'],
 			cwd: 'app/src/'
 		},
 		css: {
@@ -42,12 +61,23 @@ gulp.task('include-source', function() {
 	return gulp.src('app/index.html')
 		.pipe(wiredep({
 			exclude: ['bootstrap-sass', 'angular-mocks'],
-			cwd: '.'
+			fileTypes: {
+				html: {
+					replace: {
+						js: function(path) {
+							path = path.replace('../public/', '');
+							return '<script src="' + path + '"></script>';
+						},
+						css: function(path) {
+							path = path.replace('../public/', '');
+							return '<link rel="stylesheet" href="' + path + '" />';
+						}
+					}
+				}
+			}
 		}))
-
 		.pipe(injectFiles(paths.scripts))
 		.pipe(injectFiles(paths.css))
-
 		.pipe(gulp.dest('public'));
 
 	function injectFiles(options) {
@@ -69,7 +99,8 @@ gulp.task('watch', function() {
 		stream.on('change', livereload.changed);
 	}
 
-	handleChanges(gulp.watch(['app/styles/**', 'app/assets/css/**', 'app/src/**'], ['build-assets']));
+	handleChanges(gulp.watch(['app/styles/**', 'app/assets/css/**', 'app/src/**'], ['build']));
+	handleChanges(gulp.watch(['app/index.html'], ['include-source']));
 });
 
 gulp.task('build', function() {
@@ -79,6 +110,7 @@ gulp.task('build', function() {
 		'sass',
 		'copy-assets',
 		'copy-app',
-		'include-source'
+		'include-source',
+		'templates'
 	);
 });
